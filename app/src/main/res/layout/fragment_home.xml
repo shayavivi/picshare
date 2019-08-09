@@ -16,10 +16,4 @@
         android:text="home page"
         android:textSize="70sp" />
 
-    <Button
-        android:id="@+id/home_next_btn"
-        android:layout_width="169dp"
-        android:layout_height="120dp"
-        android:text="Button" />
-
 </LinearLayout>

@@ -29,7 +29,7 @@ public class Profile extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        Button btn = v.findViewById(R.id.profile_back_button);
+//        Button btn = v.findViewById(R.id.profile_back_button);
 
         return  v;
     }

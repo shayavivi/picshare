@@ -16,10 +16,4 @@
         android:text="profile page"
         android:textSize="70sp" />
 
-    <Button
-        android:id="@+id/profile_back_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="back" />
-
 </LinearLayout>

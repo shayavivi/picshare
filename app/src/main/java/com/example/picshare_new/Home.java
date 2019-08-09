@@ -29,8 +29,8 @@ public class Home extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        Button btn = v.findViewById(R.id.home_next_btn);
-        btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_home_to_profile));
+//        Button btn = v.findViewById(R.id.home_next_btn);
+//        btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_home_to_profile));
         return  v;
 
     }
