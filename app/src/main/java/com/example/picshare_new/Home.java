@@ -36,7 +36,6 @@ public class Home extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        Model.instance.init(getContext());
 //        Button btn = v.findViewById(R.id.home_next_btn);
 //        btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_home_to_profile));
         mPostsListRv = v.findViewById(R.id.recycler_view_posts);
@@ -47,7 +46,7 @@ public class Home extends Fragment {
 
         mPostListAdapter = new PostListAdapter(mData);
         mPostsListRv.setAdapter(mPostListAdapter);
-        return  v;
+        return v;
 
     }
 
