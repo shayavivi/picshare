@@ -3,6 +3,8 @@ package com.example.picshare_new;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -67,6 +69,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         RecyclerView mCommentsListRv;
         LinearLayoutManager mLayoutManager;
         CommentListAdapter mCommentListAdapter;
+        Button btn;
+        EditText content;
         List<Comment> mData = new LinkedList<>();
 
         public PostViewHolder(@NonNull View itemView) {
@@ -75,6 +79,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             mPicture = itemView.findViewById(R.id.row_post_image);
             mTitle = itemView.findViewById(R.id.row_post_title);
             mTimeStamp = itemView.findViewById(R.id.row_post_date);
+
+            content = itemView.findViewById(R.id.row_post_comment);
+            btn = itemView.findViewById(R.id.row_post_add_comment_btn);
 
 
             mCommentsListRv = itemView.findViewById(R.id.recycler_view_comments);
@@ -100,6 +107,16 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                 public void onCompleate(List<Comment> data) {
                     mData = data;
                     mCommentListAdapter.setmData(data);
+                    mCommentListAdapter.notifyDataSetChanged();
+                }
+            });
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // get user image and username from query
+                    Comment comment = new Comment("10",content.getText().toString(), "userid", postKey, "user image", "username");
+                    mData.add(comment);
+                    mCommentListAdapter.setmData(mData);
                     mCommentListAdapter.notifyDataSetChanged();
                 }
             });

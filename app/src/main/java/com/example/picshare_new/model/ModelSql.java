@@ -12,7 +12,7 @@ import java.util.List;
 public class ModelSql {
     MyHelper mDBhelper;
     public ModelSql(){
-//        mDBhelper = new MyHelper();
+        mDBhelper = new MyHelper(MyApplication.getContext());
     }
 
 
