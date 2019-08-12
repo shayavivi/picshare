@@ -4,25 +4,29 @@ import com.google.firebase.database.ServerValue;
 
 public class Comment {
 
-    private String content,uid,userImage,username;
+    private String commentId, content, uid, postKey, userImage, username;
     private Object timestamp;
 
 
     public Comment() {
     }
 
-    public Comment(String content, String uid, String uimg, String username) {
+    public Comment(String commentId, String content, String uid, String postKey ,String uimg, String username) {
+        this.commentId = commentId;
         this.content = content;
         this.uid = uid;
+        this.postKey = postKey;
         this.userImage = uimg;
         this.username = username;
         this.timestamp = ServerValue.TIMESTAMP;
 
     }
 
-    public Comment(String content, String uid, String uimg, String username, Object timestamp) {
+    public Comment(String commentId, String content, String uid, String postKey ,String uimg, String username, Object timestamp) {
+        this.commentId = commentId;
         this.content = content;
         this.uid = uid;
+        this.postKey = postKey;
         this.userImage = uimg;
         this.username = username;
         this.timestamp = timestamp;
@@ -66,5 +70,13 @@ public class Comment {
 
     public void setTimestamp(Object timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getPostKey() {
+        return postKey;
+    }
+
+    public void setPostKey(String postKey) {
+        this.postKey = postKey;
     }
 }

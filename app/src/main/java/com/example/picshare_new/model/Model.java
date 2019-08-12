@@ -1,6 +1,7 @@
 package com.example.picshare_new.model;
 
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,10 +12,10 @@ public class Model {
     private  Model(){
         modelSql = new ModelSql();
         modelFirebase = new ModelFirebase();
-//        for (int i =0; i < 10; i++){
-//         Post post = new Post(Integer.toString(i + 1), "an image");
-//         addPost(post);
-//        }
+        for (int i =0; i < 10; i++){
+         Post post = new Post(Integer.toString(i + 1), "a title", "picture", "123","user photo", new Date());
+         addPost(post);
+        }
 
     }
 

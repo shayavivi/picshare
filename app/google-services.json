@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "822543867374-cmaf5d3islgmr5rh2fsr2efm4nbvco1d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.picshare_new",
+            "certificate_hash": "fd1315d2495206f8d4898ac364824ecf01055f0d"
+          }
+        },
+        {
           "client_id": "822543867374-q58408ubqsgg4jqkrpprs05vp3fuc221.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

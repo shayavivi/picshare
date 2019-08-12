@@ -12,7 +12,17 @@ public class Post {
     private Object timeStamp;
 
 
-    public Post(String title, String picture, String userId, String userPhoto) {
+    public Post(String postKey, String title, String picture, String userId, String userPhoto, Object timeStamp) {
+        this.postKey = postKey;
+        this.title = title;
+        this.picture = picture;
+        this.userId = userId;
+        this.userPhoto = userPhoto;
+        this.timeStamp = timeStamp;
+    }
+
+    public Post(String postKey, String title, String picture, String userId, String userPhoto) {
+        this.postKey = postKey;
         this.title = title;
         this.picture = picture;
         this.userId = userId;
