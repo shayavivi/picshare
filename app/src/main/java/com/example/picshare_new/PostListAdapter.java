@@ -7,14 +7,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.picshare_new.model.Comment;
+import com.example.picshare_new.model.Model;
 import com.example.picshare_new.model.Post;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostViewHolder>{
-    List<Post> mData;
+    List<Post> mData = new LinkedList<>();
+
+    public void setmData(List<Post> mData) {
+        this.mData = mData;
+    }
+
+
+
 
     public PostListAdapter(List<Post> data){
         mData = data;
@@ -24,22 +35,23 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_row, parent, false);
-        PostViewHolder postViewHolder= new PostViewHolder(view);
+        PostViewHolder postViewHolder = new PostViewHolder(view);
 
         return postViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
-        String userPhoto, picture, title;
+        String postKey, userPhoto, picture, title;
         Object timeStamp;
 
+        postKey = mData.get(position).getPostKey();
         userPhoto = mData.get(position).getUserPhoto();
         picture = mData.get(position).getPicture();
         title = mData.get(position).getTitle();
         timeStamp = mData.get(position).getTimeStamp();
 
-        holder.bind(userPhoto, picture, title, timeStamp);
+        holder.bind(postKey, userPhoto, picture, title, timeStamp);
 
 
     }
@@ -52,16 +64,28 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     static class PostViewHolder extends RecyclerView.ViewHolder{
         ImageView mUserPhoto, mPicture;
         TextView mTitle, mTimeStamp;
+        RecyclerView mCommentsListRv;
+        LinearLayoutManager mLayoutManager;
+        CommentListAdapter mCommentListAdapter;
+        List<Comment> mData = new LinkedList<>();
+
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
             mUserPhoto = itemView.findViewById(R.id.row_post_uploader_image);
             mPicture = itemView.findViewById(R.id.row_post_image);
             mTitle = itemView.findViewById(R.id.row_post_title);
             mTimeStamp = itemView.findViewById(R.id.row_post_date);
-//            EditText editText = itemView.findViewById(R.id.editText);
+
+
+            mCommentsListRv = itemView.findViewById(R.id.recycler_view_comments);
+            mLayoutManager = new LinearLayoutManager(itemView.getContext());
+            mCommentsListRv.setLayoutManager(mLayoutManager);
+            mCommentsListRv.setHasFixedSize(true);
+            mCommentListAdapter = new CommentListAdapter(mData);
+
         }
 
-        public void bind(String userPhoto,String picture, String title, Object timeStamp){
+        public void bind(String postKey, String userPhoto,String picture, String title, Object timeStamp){
 //            if (mUserPhoto != null)
 //                mUserPhoto.setText(str);
 //            if (mPicture != null)
@@ -70,6 +94,16 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                 mTitle.setText(title);
             if (mTimeStamp != null)
                 mTimeStamp.setText(timeStamp.toString());
+            mCommentsListRv.setAdapter(mCommentListAdapter);
+            Model.instance.getAllcommentsOfPosts(postKey,new Model.GetAllCommentsOfPostListener() {
+                @Override
+                public void onCompleate(List<Comment> data) {
+                    mData = data;
+                    mCommentListAdapter.setmData(data);
+                    mCommentListAdapter.notifyDataSetChanged();
+                }
+            });
+
         }
     }
 }

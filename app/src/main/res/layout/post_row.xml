@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/row_post_image"
-        android:layout_width="168dp"
-        android:layout_height="124dp"
+        android:layout_width="131dp"
+        android:layout_height="99dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,8 +29,8 @@
     <EditText
 
         android:id="@+id/row_post_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="177dp"
+        android:layout_height="46dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:ems="10"
@@ -79,20 +79,20 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="TextView"
-        android:textSize="50sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:textStyle="bold"
         android:id="@+id/row_post_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="the date"
-        android:textSize="24sp"
+        android:text="the post date"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/row_post_uploader_image"
         app:layout_constraintTop_toBottomOf="@+id/row_post_title" />
 

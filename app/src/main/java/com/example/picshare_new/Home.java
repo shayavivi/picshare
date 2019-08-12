@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.example.picshare_new.model.Model;
 import com.example.picshare_new.model.Post;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ public class Home extends Fragment {
     RecyclerView mPostsListRv;
     LinearLayoutManager mLayoutManeger;
     PostListAdapter mPostListAdapter;
-    List<Post> mData;
+    List<Post> mData = new LinkedList<>();
 
     public Home() {
         // Required empty public constructor
@@ -39,13 +40,22 @@ public class Home extends Fragment {
 //        Button btn = v.findViewById(R.id.home_next_btn);
 //        btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_home_to_profile));
         mPostsListRv = v.findViewById(R.id.recycler_view_posts);
-        mPostsListRv.setHasFixedSize(true);
         mLayoutManeger = new LinearLayoutManager(v.getContext());
         mPostsListRv.setLayoutManager(mLayoutManeger);
-        mData = Model.instance.getAllPosts();
-
+        mPostsListRv.setHasFixedSize(true);
         mPostListAdapter = new PostListAdapter(mData);
         mPostsListRv.setAdapter(mPostListAdapter);
+
+        Model.instance.getAllPosts(new Model.GetAllPostsListener() {
+            @Override
+            public void onCompleate(List<Post> data) {
+                mData = data;
+                mPostListAdapter.setmData(data);
+                mPostListAdapter.notifyDataSetChanged();
+            }
+        });
+
+
         return v;
 
     }
