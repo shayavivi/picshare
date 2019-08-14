@@ -1,33 +1,43 @@
 package com.example.picshare_new.model;
 
 
-import com.google.firebase.database.ServerValue;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
+
+@Entity
 public class Post {
+    @PrimaryKey
+    @NonNull
     private String postKey;
     private String title;
     private String picture;
     private String userId;
     private String userPhoto;
-    private Object timeStamp;
 
 
-    public Post(String postKey, String title, String picture, String userId, String userPhoto, Object timeStamp) {
+    @Ignore
+    public Post(String postKey, String title, String picture, String userId, String userPhoto, Date timeStamp) {
         this.postKey = postKey;
         this.title = title;
         this.picture = picture;
         this.userId = userId;
         this.userPhoto = userPhoto;
-        this.timeStamp = timeStamp;
     }
 
+    @Ignore
     public Post(String postKey, String title, String picture, String userId, String userPhoto) {
         this.postKey = postKey;
         this.title = title;
         this.picture = picture;
         this.userId = userId;
         this.userPhoto = userPhoto;
-        this.timeStamp = ServerValue.TIMESTAMP;
     }
 
     // make sure to have an empty constructor inside ur model class
@@ -59,10 +69,6 @@ public class Post {
         return userPhoto;
     }
 
-    public Object getTimeStamp() {
-        return timeStamp;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -79,7 +85,4 @@ public class Post {
         this.userPhoto = userPhoto;
     }
 
-    public void setTimeStamp(Object timeStamp) {
-        this.timeStamp = timeStamp;
-    }
 }

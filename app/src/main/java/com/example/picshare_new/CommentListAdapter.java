@@ -43,9 +43,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
         content = mData.get(position).getContent();
         userImage = mData.get(position).getUimg();
-        username = mData.get(position).getUname();
-        timestamp = mData.get(position).getTimestamp();
-        holder.bind(content, userImage, username, timestamp);
+        holder.bind(content, userImage);
 
     }
 
@@ -56,26 +54,22 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
     static class CommentViewHolder extends RecyclerView.ViewHolder{
         ImageView mUserImage;
-        TextView mContent, nUsername, mTimestamp;
+        TextView mContent;
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
             mUserImage = itemView.findViewById(R.id.row_comment_image);
             mContent = itemView.findViewById(R.id.row_comment_comment_text);
-            nUsername = itemView.findViewById(R.id.row_comment_username);
-            mTimestamp = itemView.findViewById(R.id.row_comment_date);
+
 
 
         }
-        public void bind(String content, String userImage, String username, Object timestamp){
+        public void bind(String content, String userImage){
 //            if (mUserImage != null)
 //                mUserImage.setText(content);
             if (mContent != null)
                 mContent.setText(content);
-            if (nUsername != null)
-                nUsername.setText(username);
-            if (mTimestamp != null)
-                mTimestamp.setText(timestamp.toString());
+
 
         }
 

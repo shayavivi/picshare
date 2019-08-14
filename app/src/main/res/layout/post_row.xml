@@ -84,16 +84,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/row_post_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:text="the post date"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/row_post_uploader_image"
-        app:layout_constraintTop_toBottomOf="@+id/row_post_title" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

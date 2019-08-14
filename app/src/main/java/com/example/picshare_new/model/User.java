@@ -1,17 +1,31 @@
 package com.example.picshare_new.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class User {
+    @PrimaryKey
+    @NonNull
     String userId;
     String profileImage;
-    String username;
+    String email;
     String password;
     public User(){ }
-    public User(String id, String image, String uname, String pass){
+    public User(String id, String image, String email, String pass){
         this.userId = id;
         this.profileImage = image;
-        this.username = uname;
+        this.email = email;
         this.password = pass;
 
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getProfileImage() {
@@ -20,14 +34,6 @@ public class User {
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {

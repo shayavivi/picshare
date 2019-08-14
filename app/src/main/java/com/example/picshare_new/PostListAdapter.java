@@ -9,6 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +25,7 @@ import java.util.List;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostViewHolder>{
     List<Post> mData = new LinkedList<>();
+    Fragment holdingFragment;
 
     public void setmData(List<Post> mData) {
         this.mData = mData;
@@ -29,8 +34,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
 
 
 
-    public PostListAdapter(List<Post> data){
+    public PostListAdapter(List<Post> data, Fragment holdingFragment){
         mData = data;
+        this.holdingFragment = holdingFragment;
     }
 
     @NonNull
@@ -45,40 +51,41 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         String postKey, userPhoto, picture, title;
-        Object timeStamp;
 
         postKey = mData.get(position).getPostKey();
         userPhoto = mData.get(position).getUserPhoto();
         picture = mData.get(position).getPicture();
         title = mData.get(position).getTitle();
-        timeStamp = mData.get(position).getTimeStamp();
 
-        holder.bind(postKey, userPhoto, picture, title, timeStamp);
+        holder.bind(postKey, userPhoto, picture, title, holdingFragment);
 
 
     }
 
     @Override
     public int getItemCount() {
+        if (mData == null)
+            return 0;
         return mData.size();
     }
 
     static class PostViewHolder extends RecyclerView.ViewHolder{
         ImageView mUserPhoto, mPicture;
-        TextView mTitle, mTimeStamp;
+        TextView mTitle;
         RecyclerView mCommentsListRv;
         LinearLayoutManager mLayoutManager;
         CommentListAdapter mCommentListAdapter;
         Button btn;
         EditText content;
         List<Comment> mData = new LinkedList<>();
+        CommentViewModel viewData;
+        LiveData<List<Comment>> liveData;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
             mUserPhoto = itemView.findViewById(R.id.row_post_uploader_image);
             mPicture = itemView.findViewById(R.id.row_post_image);
             mTitle = itemView.findViewById(R.id.row_post_title);
-            mTimeStamp = itemView.findViewById(R.id.row_post_date);
 
             content = itemView.findViewById(R.id.row_post_comment);
             btn = itemView.findViewById(R.id.row_post_add_comment_btn);
@@ -90,19 +97,36 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             mCommentsListRv.setHasFixedSize(true);
             mCommentListAdapter = new CommentListAdapter(mData);
 
+
         }
 
-        public void bind(String postKey, String userPhoto,String picture, String title, Object timeStamp){
+        public void bind(String postKey, String userPhoto,String picture, String title, Fragment holdingFragment){
 //            if (mUserPhoto != null)
 //                mUserPhoto.setText(str);
 //            if (mPicture != null)
 //                mPicture.setText(str);
             if (mTitle != null)
                 mTitle.setText(title);
-            if (mTimeStamp != null)
-                mTimeStamp.setText(timeStamp.toString());
             mCommentsListRv.setAdapter(mCommentListAdapter);
-            Model.instance.getAllcommentsOfPosts(postKey,new Model.GetAllCommentsOfPostListener() {
+
+            viewData = ViewModelProviders.of(holdingFragment).get(CommentViewModel.class);
+            viewData.setListener(postKey);
+            liveData = viewData.getmData();
+            liveData.observe(holdingFragment, new Observer<List<Comment>>() {
+                @Override
+                public void onChanged(List<Comment> comments) {
+                    mCommentListAdapter.setmData(comments);
+                    mCommentListAdapter.notifyDataSetChanged();
+                }
+            });
+
+
+
+
+
+
+
+            Model.instance.getAllcommentsOfPost(postKey, new Model.GetAllCommentsOfPostListener() {
                 @Override
                 public void onCompleate(List<Comment> data) {
                     mData = data;
@@ -114,10 +138,17 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                 @Override
                 public void onClick(View view) {
                     // get user image and username from query
-                    Comment comment = new Comment("10",content.getText().toString(), "userid", postKey, "user image", "username");
-                    mData.add(comment);
-                    mCommentListAdapter.setmData(mData);
-                    mCommentListAdapter.notifyDataSetChanged();
+                    Comment comment = new Comment("10",content.getText().toString(), "userid", postKey, "user image");
+                    Model.instance.addComment(comment, new Model.basicOnCompleateListener() {
+                        @Override
+                        public void onCompleate(boolean done) {
+                            if(done == true){
+                                mCommentListAdapter.setmData(mData);
+                                mCommentListAdapter.notifyDataSetChanged();
+
+                            }
+                        }
+                    });
                 }
             });
 

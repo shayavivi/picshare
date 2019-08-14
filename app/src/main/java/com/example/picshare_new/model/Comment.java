@@ -1,35 +1,45 @@
 package com.example.picshare_new.model;
 
-import com.google.firebase.database.ServerValue;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
+
+@Entity
 public class Comment {
 
-    private String commentId, content, uid, postKey, userImage, username;
-    private Object timestamp;
+    @PrimaryKey
+    @NonNull
+    String commentId;
+    String content;
+    String uid;
+    String postKey;
+    String userImage;
 
 
     public Comment() {
     }
 
-    public Comment(String commentId, String content, String uid, String postKey ,String uimg, String username) {
+    public Comment(String commentId, String content, String uid, String postKey ,String uimg) {
         this.commentId = commentId;
         this.content = content;
         this.uid = uid;
         this.postKey = postKey;
         this.userImage = uimg;
-        this.username = username;
-        this.timestamp = ServerValue.TIMESTAMP;
 
     }
 
-    public Comment(String commentId, String content, String uid, String postKey ,String uimg, String username, Object timestamp) {
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
         this.commentId = commentId;
-        this.content = content;
-        this.uid = uid;
-        this.postKey = postKey;
-        this.userImage = uimg;
-        this.username = username;
-        this.timestamp = timestamp;
     }
 
     public String getContent() {
@@ -56,21 +66,6 @@ public class Comment {
         this.userImage = uimg;
     }
 
-    public String getUname() {
-        return username;
-    }
-
-    public void setUname(String username) {
-        this.username = username;
-    }
-
-    public Object getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Object timestamp) {
-        this.timestamp = timestamp;
-    }
 
     public String getPostKey() {
         return postKey;

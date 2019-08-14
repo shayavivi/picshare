@@ -1,9 +1,16 @@
 package com.example.picshare_new;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,35 +32,40 @@ public class Home extends Fragment {
     RecyclerView mPostsListRv;
     LinearLayoutManager mLayoutManeger;
     PostListAdapter mPostListAdapter;
-    List<Post> mData = new LinkedList<>();
+    HomeViewModel viewData;
+    LiveData<List<Post>> liveData;
 
     public Home() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewData = ViewModelProviders.of(this).get(HomeViewModel.class);
+        liveData = viewData.getmData();
+        liveData.observe(this, new Observer<List<Post>>() {
+            @Override
+            public void onChanged(List<Post> posts) {
+                mPostListAdapter.setmData(posts);
+                mPostListAdapter.notifyDataSetChanged();
+            }
+        });
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-//        Button btn = v.findViewById(R.id.home_next_btn);
-//        btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_home_to_profile));
+
         mPostsListRv = v.findViewById(R.id.recycler_view_posts);
         mLayoutManeger = new LinearLayoutManager(v.getContext());
         mPostsListRv.setLayoutManager(mLayoutManeger);
         mPostsListRv.setHasFixedSize(true);
-        mPostListAdapter = new PostListAdapter(mData);
+        mPostListAdapter = new PostListAdapter(viewData.getmData().getValue(), this);
         mPostsListRv.setAdapter(mPostListAdapter);
 
-        Model.instance.getAllPosts(new Model.GetAllPostsListener() {
-            @Override
-            public void onCompleate(List<Post> data) {
-                mData = data;
-                mPostListAdapter.setmData(data);
-                mPostListAdapter.notifyDataSetChanged();
-            }
-        });
 
 
         return v;
