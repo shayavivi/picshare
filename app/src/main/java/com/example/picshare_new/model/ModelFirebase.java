@@ -1,5 +1,8 @@
 package com.example.picshare_new.model;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -13,7 +16,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.security.Key;
 import java.util.LinkedList;
 
@@ -33,6 +40,28 @@ public class ModelFirebase {
 //        void onComplete(List<Post> data);
 //    }
 
+    public void uploadImage(Bitmap imageBmp, String name , final Model.SaveImageListener listener)
+    {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference imagesRef = storage.getReference().child("images").child(name);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imageBmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = imagesRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception exception) {
+                listener.fail();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getUploadSessionUri();
+                listener.complete(downloadUrl.toString());
+            }
+        });
+    }
+
     //users!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public String getCurrentUserid(){
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -41,19 +70,11 @@ public class ModelFirebase {
         else
             return null;
     }
-    public void register(String email, String password, String image, Model.basicListener listener) {
+    public void register(String email, String password, String image, Model.RegisterListener listener) {
             mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
                 public void onSuccess(AuthResult authResult) {
-                    if(authResult != null) {
-                        addUser(authResult.getUser(), password);
-                        listener.onSuccess(authResult.getUser().getUid());
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    listener.onFailure(e.getMessage().replace("[","").replace("]",""));
+                    listener.onCcomplete(authResult.getUser(), password);
                 }
             });
 
@@ -79,9 +100,14 @@ public class ModelFirebase {
         FirebaseAuth.getInstance().signOut();
     }
 
-    public void addUser(FirebaseUser firebaseUser, String password) {
+    public void addUser(FirebaseUser firebaseUser, String password, Model.basicOnCompleateListener listener) {
         User user = new User(firebaseUser.getUid(), "an image", firebaseUser.getEmail(), password);
-        db.collection("Users").document().set(user);
+        db.collection("Users").document().set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                listener.onCompleate(true);
+            }
+        });
     }
 
 

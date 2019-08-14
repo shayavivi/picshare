@@ -1,6 +1,17 @@
 package com.example.picshare_new.model;
 
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -23,13 +34,51 @@ public class Model {
 
     }
 
+    interface SaveImageListener{
+        public void fail();
+        public void complete(String uri);
+    }
+    interface RegisterListener{
+        public void onCcomplete(FirebaseUser user, String password);
+    }
+    interface addUserListener{
+        public void onCcomplete(User user);
+    }
 
+
+    public void uploadImage(Bitmap imageBmp, String name)
+    {
+        modelFirebase.uploadImage(imageBmp, name, new SaveImageListener() {
+            @Override
+            public void fail() {
+
+            }
+
+            @Override
+            public void complete(String uri) {
+
+            }
+        });
+    }
     //users!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public String getCurrentUserId(){
        return modelFirebase.getCurrentUserid();
     }
     public void register(String email, String password, String image, basicListener listener){
-        modelFirebase.register(email, password, image, listener);
+        modelFirebase.register(email, password, image, new RegisterListener() {
+            @Override
+            public void onCcomplete(FirebaseUser user, String password) {
+                modelFirebase.addUser(user, password, new basicOnCompleateListener() {
+                    @Override
+                    public void onCompleate(boolean done) {
+                        if (done == true){
+                            listener.
+                        }
+                    }
+                });
+            }
+
+        });
 
     }
 
