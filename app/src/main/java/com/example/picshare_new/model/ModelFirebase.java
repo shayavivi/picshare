@@ -70,7 +70,7 @@ public class ModelFirebase {
         else
             return null;
     }
-    public void register(String email, String password, String image, Model.RegisterListener listener) {
+    public void register(String email, String password, Model.RegisterListener listener) {
             mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
                 public void onSuccess(AuthResult authResult) {
@@ -100,12 +100,12 @@ public class ModelFirebase {
         FirebaseAuth.getInstance().signOut();
     }
 
-    public void addUser(FirebaseUser firebaseUser, String password, Model.basicOnCompleateListener listener) {
-        User user = new User(firebaseUser.getUid(), "an image", firebaseUser.getEmail(), password);
+    public void addUser(FirebaseUser firebaseUser, String image, String password, Model.addUserListener listener) {
+        User user = new User(firebaseUser.getUid(), image, firebaseUser.getEmail(), password);
         db.collection("Users").document().set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                listener.onCompleate(true);
+                listener.onCcomplete(user);
             }
         });
     }

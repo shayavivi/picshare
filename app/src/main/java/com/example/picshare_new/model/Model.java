@@ -46,6 +46,7 @@ public class Model {
     }
 
 
+
     public void uploadImage(Bitmap imageBmp, String name)
     {
         modelFirebase.uploadImage(imageBmp, name, new SaveImageListener() {
@@ -66,16 +67,14 @@ public class Model {
     }
 
     public void register(String email, String password, String image, basicListener listener){
-        modelFirebase.register(email, password, image, new RegisterListener() {
+        modelFirebase.register(email, password, new RegisterListener() {
             @Override
             public void onCcomplete(FirebaseUser user, String password) {
-                modelFirebase.addUser(user, password, new basicOnCompleateListener() {
+                modelFirebase.addUser(user, image, password, new addUserListener() {
                     @Override
-                    public void onCompleate(boolean done) {
-                        if (done == true){
-                            UserAsyncDao.addUser(user, null);
-                            listener.onSuccess(user.getUid());
-                        }
+                    public void onCcomplete(User user) {
+                        UserAsyncDao.addUser(user, null);
+                        listener.onSuccess(user.getUserId());
                     }
                 });
             }
