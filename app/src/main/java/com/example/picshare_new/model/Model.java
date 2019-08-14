@@ -64,6 +64,7 @@ public class Model {
     public String getCurrentUserId(){
        return modelFirebase.getCurrentUserid();
     }
+
     public void register(String email, String password, String image, basicListener listener){
         modelFirebase.register(email, password, image, new RegisterListener() {
             @Override
@@ -72,7 +73,8 @@ public class Model {
                     @Override
                     public void onCompleate(boolean done) {
                         if (done == true){
-                            listener.
+                            UserAsyncDao.addUser(user, null);
+                            listener.onSuccess(user.getUid());
                         }
                     }
                 });

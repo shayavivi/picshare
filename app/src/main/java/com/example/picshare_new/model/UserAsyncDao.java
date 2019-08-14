@@ -1,5 +1,7 @@
 package com.example.picshare_new.model;
 
+import android.os.AsyncTask;
+
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -18,5 +20,25 @@ interface UserDao {
 }
 
 public class UserAsyncDao{
+
+    public static void addUser(User user, Model.basicOnCompleateListener listener) {
+
+        new AsyncTask<String, String, String>() {
+            @Override
+            protected String doInBackground(String... strings) {
+                ModelSql.db.UserDao().insertAll(user);
+                return "";
+            }
+
+            @Override
+            protected void onPostExecute(String data) {
+                super.onPostExecute(data);
+                if (listener != null)
+                    listener.onCompleate(true);
+
+            }
+        }.execute();
+    }
+
 
 }
