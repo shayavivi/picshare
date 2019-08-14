@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.picshare_new.model.Comment;
 import com.example.picshare_new.model.Model;
 import com.example.picshare_new.model.Post;
@@ -69,13 +70,14 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         return mData.size();
     }
 
-    static class PostViewHolder extends RecyclerView.ViewHolder{
+     class PostViewHolder extends RecyclerView.ViewHolder{
         ImageView mUserPhoto, mPicture;
         TextView mTitle;
         RecyclerView mCommentsListRv;
         LinearLayoutManager mLayoutManager;
         CommentListAdapter mCommentListAdapter;
-        Button btn;
+        Button btn, deletePost, updatePost;
+        String postKeyOfClass;
         EditText content;
         List<Comment> mData = new LinkedList<>();
         CommentViewModel viewData;
@@ -89,6 +91,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
 
             content = itemView.findViewById(R.id.row_post_comment);
             btn = itemView.findViewById(R.id.row_post_add_comment_btn);
+            deletePost = itemView.findViewById(R.id.row_post_delete_post);
+            updatePost = itemView.findViewById(R.id.row_post_updata_post);
 
 
             mCommentsListRv = itemView.findViewById(R.id.recycler_view_comments);
@@ -101,10 +105,12 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         }
 
         public void bind(String postKey, String userPhoto,String picture, String title, Fragment holdingFragment){
-//            if (mUserPhoto != null)
-//                mUserPhoto.setText(str);
-//            if (mPicture != null)
-//                mPicture.setText(str);
+            dealButtonsAccrdingFragment(holdingFragment);
+            postKeyOfClass = postKey;
+            if (userPhoto != null)
+                Glide.with(MainActivity.context).load(userPhoto).into(mUserPhoto);
+            if (picture != null)
+                Glide.with(MainActivity.context).load(picture).into(mPicture);
             if (mTitle != null)
                 mTitle.setText(title);
             mCommentsListRv.setAdapter(mCommentListAdapter);
@@ -115,8 +121,10 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             liveData.observe(holdingFragment, new Observer<List<Comment>>() {
                 @Override
                 public void onChanged(List<Comment> comments) {
-                    mCommentListAdapter.setmData(comments);
-                    mCommentListAdapter.notifyDataSetChanged();
+                    if (CommentViewModel.changedPostKey == postKeyOfClass) {
+                        mCommentListAdapter.setmData(comments);
+                        mCommentListAdapter.notifyDataSetChanged();
+                    }
                 }
             });
 
@@ -138,19 +146,28 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                 @Override
                 public void onClick(View view) {
                     // get user image and username from query
-                    Comment comment = new Comment("10",content.getText().toString(), "userid", postKey, "user image");
-                    Model.instance.addComment(comment, new Model.basicOnCompleateListener() {
-                        @Override
-                        public void onCompleate(boolean done) {
-                            if(done == true){
-                                mCommentListAdapter.setmData(mData);
-                                mCommentListAdapter.notifyDataSetChanged();
+                    Comment comment = new Comment("10",content.getText().toString(), MyApp.getCurrentUserId(), postKey, "user image");
+                    Model.instance.addComment(comment, new Model.addCommentListener() {
 
-                            }
+                        @Override
+                        public void onComplete(Comment comment) {
+                            mData.add(comment);
+                            mCommentListAdapter.setmData(mData);
+                            mCommentListAdapter.notifyDataSetChanged();
                         }
                     });
                 }
             });
+
+        }
+        private void dealButtonsAccrdingFragment(Fragment fragment){
+            if(Home.class == fragment.getClass()){
+                deletePost.setVisibility(View.GONE);
+                updatePost.setVisibility(View.GONE);
+            }
+            else {
+
+            }
 
         }
     }

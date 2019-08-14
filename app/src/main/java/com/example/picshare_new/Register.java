@@ -46,10 +46,11 @@ public class Register extends Fragment {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     final static int RESAULT_SUCCESS = 0;
 
-    String uri;
+
     EditText email, password;
     Button toLogIn, Register;
     ImageView profileImage;
+    boolean isPicked = false;
     Bitmap imageBitmap;
 
     public Register() {
@@ -84,16 +85,23 @@ public class Register extends Fragment {
         Register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (email != null && password != null && profileImage != null) {
+                if (email != null && password != null && isPicked) {
                     String sEmail = email.getText().toString();
                     String sPassword = password.getText().toString();
-                    Model.instance.register(sEmail, sPassword, uri, new Model.basicListener() {
+                    Model.instance.register(sEmail, sPassword, new Model.basicListener() {
 
                         @Override
                         public void onSuccess(String id) {
                             MyApp.setCurrentUserId(id);
-                            Model.instance.uploadImage(imageBitmap, uri);
-                            getActivity().finish();
+                            Model.instance.addUser(id, sEmail, sPassword, imageBitmap, new Model.basicOnCompleateListener() {
+                                @Override
+                                public void onCompleate(boolean done) {
+                                    if (done == true)
+                                        getActivity().finish();
+
+                                }
+                            });
+
                         }
 
                         @Override
@@ -111,9 +119,6 @@ public class Register extends Fragment {
             public void onClick(View view) {
                 dispatchTakePictureIntent();
 
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-                uri = sdf.format(new Date());
-                saveImageToFile(imageBitmap, uri);
             }
         });
 
@@ -139,37 +144,13 @@ public class Register extends Fragment {
             Bundle extras = data.getExtras();
             imageBitmap = (Bitmap) extras.get("data");
             profileImage.setImageBitmap(imageBitmap);
+            isPicked = true;
         }
     }
 
-    private void saveImageToFile(Bitmap imageBitmap, String imageFileName) {
-        try {
-            File dir = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES);
-            if (!dir.exists()) {
-                dir.mkdir();
-            }
-            File imageFile = new File(dir, imageFileName);
-            imageFile.createNewFile();
-            OutputStream out = new FileOutputStream(imageFile);
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.close();
-            addPictureToGallery(imageFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    private void addPictureToGallery(File imageFile) {
-        //add the picture to the gallery so we dont need to manage the cache size
-        Intent mediaScanIntent = new
-                Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri contentUri = Uri.fromFile(imageFile);
-        mediaScanIntent.setData(contentUri);
-        getContext().sendBroadcast(mediaScanIntent);
-    }
+
+
 
 
 

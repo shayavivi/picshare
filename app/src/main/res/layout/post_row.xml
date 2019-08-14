@@ -10,8 +10,8 @@
         android:id="@+id/row_post_image"
         android:layout_width="131dp"
         android:layout_height="99dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="140dp"
+        android:layout_marginTop="44dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/row_post_uploader_image"
         app:srcCompat="@drawable/user" />
@@ -52,22 +52,19 @@
     <ImageView
         android:id="@+id/row_post_uploader_image"
         android:layout_width="60dp"
-        android:layout_height="78dp"
+        android:layout_height="55dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/row_post_title"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="@drawable/common_full_open_on_phone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_comments"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_width="289dp"
+        android:layout_height="158dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/row_post_comment" />
 
@@ -83,5 +80,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/row_post_delete_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="delete"
+        app:layout_constraintEnd_toStartOf="@+id/row_post_updata_post"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/row_post_uploader_image"
+        app:layout_constraintTop_toBottomOf="@+id/row_post_title" />
+
+    <Button
+        android:id="@+id/row_post_updata_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="update"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/row_post_delete_post"
+        app:layout_constraintTop_toTopOf="@+id/row_post_delete_post" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

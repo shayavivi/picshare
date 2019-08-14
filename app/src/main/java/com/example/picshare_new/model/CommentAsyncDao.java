@@ -66,7 +66,7 @@ public class CommentAsyncDao{
 
     }
 
-    public static void addComment(Comment comment, Model.basicOnCompleateListener listener) {
+    public static void addComment(Comment comment) {
         new AsyncTask<String, String, String>() {
             @Override
             protected String doInBackground(String... strings) {
@@ -77,8 +77,6 @@ public class CommentAsyncDao{
             @Override
             protected void onPostExecute(String data) {
                 super.onPostExecute(data);
-                if (listener != null)
-                    listener.onCompleate(true);
 
             }
         }.execute();

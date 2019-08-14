@@ -12,6 +12,7 @@ import java.util.List;
 
 public class CommentViewModel extends ViewModel {
     MutableLiveData<List<Comment>> mData = new MutableLiveData<>();
+    static String changedPostKey;
     public CommentViewModel(){
     }
     public LiveData<List<Comment>> getmData() {
@@ -27,6 +28,7 @@ public class CommentViewModel extends ViewModel {
 
             @Override
             public void onCompleate(List<Comment> data) {
+                changedPostKey = postKey;
                 mData.setValue(data);
             }
         });

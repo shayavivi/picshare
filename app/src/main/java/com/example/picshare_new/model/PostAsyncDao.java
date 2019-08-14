@@ -8,6 +8,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.example.picshare_new.MyApp;
+
 import java.util.List;
 
 @Dao
@@ -20,6 +22,9 @@ interface PostDao {
     void insertPosts(List<Post> data);
     @Delete
     void delete(Post post);
+
+    @Query("select * from Post where userId =:userId")
+    List<Post> getAllByUserId(String userId);
 }
 
 public class PostAsyncDao{
@@ -66,6 +71,42 @@ public class PostAsyncDao{
                     ModelSql.db.PostDao().insertPosts(posts[0]);
 
                 List<Post> list = ModelSql.db.PostDao().getAll();
+                return list;
+            }
+
+            @Override
+            protected void onPostExecute(List<Post> data) {
+                super.onPostExecute(data);
+                listener.onCompleate(data);
+
+            }
+        }.execute(data);
+    }
+
+    public static void getAllPostsByUserId(String userId, Model.GetAllPostsListener listener) {
+        new AsyncTask<String, String, List <Post>>() {
+            @Override
+            protected List<Post> doInBackground(String... strings) {
+                List<Post> list = ModelSql.db.PostDao().getAllByUserId(userId);
+                return list;
+            }
+
+            @Override
+            protected void onPostExecute(List<Post> data) {
+                super.onPostExecute(data);
+                listener.onCompleate(data);
+
+            }
+        }.execute();
+    }
+
+    public static void addPostsAndGetPostsListByUserId(List<Post> data, Model.GetAllPostsListener listener) {
+        new AsyncTask<List<Post>, String, List <Post>>() {
+            @Override
+            protected List<Post> doInBackground(List<Post>... posts) {
+                ModelSql.db.PostDao().insertPosts(posts[0]);
+
+                List<Post> list = ModelSql.db.PostDao().getAllByUserId(MyApp.getCurrentUserId());
                 return list;
             }
 

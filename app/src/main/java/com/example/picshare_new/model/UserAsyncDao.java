@@ -8,6 +8,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.example.picshare_new.MyApp;
+
 import java.util.List;
 
 @Dao
@@ -41,4 +43,21 @@ public class UserAsyncDao{
     }
 
 
+    public static void getUserById(Model.addUserListener listener) {
+        new AsyncTask<String, String, User>() {
+            @Override
+            protected User doInBackground(String... strings) {
+                User user = ModelSql.db.UserDao().getById(MyApp.getCurrentUserId());
+                return user;
+            }
+
+            @Override
+            protected void onPostExecute(User data) {
+                super.onPostExecute(data);
+                if (listener != null && data != null)
+                    listener.onComplete(data);
+
+            }
+        }.execute();
+    }
 }

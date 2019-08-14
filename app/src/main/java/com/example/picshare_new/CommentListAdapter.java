@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.picshare_new.model.Comment;
 
 import java.util.List;
@@ -65,8 +66,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
         }
         public void bind(String content, String userImage){
-//            if (mUserImage != null)
-//                mUserImage.setText(content);
+            if (userImage != null)
+                Glide.with(MainActivity.context).load(userImage).into(mUserImage);
             if (mContent != null)
                 mContent.setText(content);
 

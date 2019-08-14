@@ -2,17 +2,10 @@ package com.example.picshare_new.model;
 
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.picshare_new.MyApp;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
-import java.util.Date;
 import java.util.List;
 
 public class Model {
@@ -34,22 +27,36 @@ public class Model {
 
     }
 
+
+
+
     interface SaveImageListener{
         public void fail();
         public void complete(String uri);
     }
-    interface RegisterListener{
-        public void onCcomplete(FirebaseUser user, String password);
-    }
     interface addUserListener{
-        public void onCcomplete(User user);
+        public void onComplete(User user);
+    }
+    public interface addCommentListener{
+        public void onComplete(Comment comment);
+    }
+    public interface addPostListener{
+        public void onComplete(Post post);
     }
 
 
 
-    public void uploadImage(Bitmap imageBmp, String name)
-    {
-        modelFirebase.uploadImage(imageBmp, name, new SaveImageListener() {
+
+    //users!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public String getCurrentUserId(){
+       return modelFirebase.getCurrentUserid();
+    }
+
+    public void register(String email, String password, basicListener listener){
+        modelFirebase.register(email, password, listener);
+    }
+    public void addUser(String id, String email, String password, Bitmap imageBitmap, Model.basicOnCompleateListener listener) {
+        Model.instance.modelFirebase.uploadImage(imageBitmap, new SaveImageListener() {
             @Override
             public void fail() {
 
@@ -57,30 +64,15 @@ public class Model {
 
             @Override
             public void complete(String uri) {
-
-            }
-        });
-    }
-    //users!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    public String getCurrentUserId(){
-       return modelFirebase.getCurrentUserid();
-    }
-
-    public void register(String email, String password, String image, basicListener listener){
-        modelFirebase.register(email, password, new RegisterListener() {
-            @Override
-            public void onCcomplete(FirebaseUser user, String password) {
-                modelFirebase.addUser(user, image, password, new addUserListener() {
+                modelFirebase.addUser(id, email, password, uri, new addUserListener() {
                     @Override
-                    public void onCcomplete(User user) {
-                        UserAsyncDao.addUser(user, null);
-                        listener.onSuccess(user.getUserId());
+                    public void onComplete(User user) {
+                        UserAsyncDao.addUser(user, listener);
+
                     }
                 });
             }
-
         });
-
     }
 
     public void login(String sEmail, String sPassword, basicListener listener) {
@@ -133,16 +125,55 @@ public class Model {
 
              }
          });
-
-
-
-
     }
-    public void addPost(Post post, basicOnCompleateListener listener)
+
+    public void getAllPostsByUserId(GetAllPostsListener listener) {
+        PostAsyncDao.getAllPostsByUserId(MyApp.getCurrentUserId(), new GetAllPostsListener() {
+            @Override
+            public void onCompleate(List<Post> data) {
+                listener.onCompleate(data);
+                modelFirebase.getAllPostsByUserId(new GetAllPostsListener() {
+                    @Override
+                    public void onCompleate(List<Post> data) {
+                        PostAsyncDao.addPostsAndGetPostsListByUserId(data, new GetAllPostsListener() {
+                            @Override
+                            public void onCompleate(List<Post> data) {
+                                listener.onCompleate(data);
+                            }
+                        });
+
+                    }
+                });
+
+            }
+        });
+    }
+    public void addPost(Post post, Bitmap imageBitmap, addPostListener listener)
     {
+        modelFirebase.uploadImage(imageBitmap, new SaveImageListener() {
+            @Override
+            public void fail() {
+
+            }
+
+            @Override
+            public void complete(String uri) {
+                UserAsyncDao.getUserById(new addUserListener() {
+                    @Override
+                    public void onComplete(User user) {
+                        post.setUserPhoto(user.getProfileImage());
+                        post.setPicture(uri);
+                        post.setPostKey(modelFirebase.addPost(post));
+                        PostAsyncDao.addPost(post, null);
+                        listener.onComplete(post);
+
+                    }
+                });
+            }
+        });
 
         modelFirebase.addPost(post);
-        PostAsyncDao.addPost(post, listener);
+        PostAsyncDao.addPost(post, null);
     }
 
 
@@ -178,15 +209,23 @@ public class Model {
         });
     }
 
-    public void addComment(Comment comment, basicOnCompleateListener listener)
+    public void addComment(Comment comment, addCommentListener listener)
     {
-        modelFirebase.addComment(comment, new StoreToLocalListener() {
+        UserAsyncDao.getUserById(new addUserListener() {
             @Override
-            public void onCompleate(String key) {
-                comment.setCommentId(key);
-                CommentAsyncDao.addComment(comment, listener);
+            public void onComplete(User user) {
+                comment.setUimg(user.getProfileImage());
+                modelFirebase.addComment(comment, new StoreToLocalListener() {
+                    @Override
+                    public void onCompleate(String key) {
+                        comment.setCommentId(key);
+                        CommentAsyncDao.addComment(comment);
+                        listener.onComplete(comment);
+                    }
+                });
             }
         });
+
 
     }
 
