@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.security.Key;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -173,6 +174,19 @@ public class ModelFirebase {
         db.collection("Posts").document(post.getPostKey()).set(post);
         return key;
     }
+    public void deletePost(String postKey, Model.basicOnCompleateListener listener) {
+        db.collection("Posts").document(postKey).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                listener.onCompleate(true);
+
+            }
+        });
+    }
+
+
+
+
     //comments!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public String addComment(Comment comment, Model.StoreToLocalListener listener){
         String key = db.collection("Comments").document().getId();
@@ -205,4 +219,12 @@ public class ModelFirebase {
 
     }
 
+    public void deleteAllCommentsByPostKey(String postKey, Model.basicOnCompleateListener listener) {
+        db.collection("Comments").document(postKey).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                listener.onCompleate(true);
+            }
+        });
+    }
 }

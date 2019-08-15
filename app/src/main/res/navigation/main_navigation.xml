@@ -23,10 +23,18 @@
         <action
             android:id="@+id/action_profile_fragment_to_newPictureFragment"
             app:destination="@id/new_picture_fragment" />
+        <action
+            android:id="@+id/action_profile_fragment_to_updateFragment"
+            app:destination="@id/updateFragment" />
     </fragment>
     <fragment
         android:id="@+id/new_picture_fragment"
         android:name="com.example.picshare_new.new_picture"
         android:label="fragment_new_picture"
         tools:layout="@layout/fragment_new_picture"/>
+    <fragment
+        android:id="@+id/updateFragment"
+        android:name="com.example.picshare_new.updateFragment"
+        android:label="fragment_update"
+        tools:layout="@layout/fragment_update" />
 </navigation>

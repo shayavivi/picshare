@@ -47,7 +47,12 @@ public class Home extends Fragment {
         liveData.observe(this, new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> posts) {
-                mPostListAdapter.setmData(posts);
+                List<Post> notDeletetPosts = new LinkedList<>();
+                for(Post post: posts){
+                    if (post.getPicture() != null)
+                        notDeletetPosts.add(post);
+                }
+                mPostListAdapter.setmData(notDeletetPosts);
                 mPostListAdapter.notifyDataSetChanged();
             }
         });

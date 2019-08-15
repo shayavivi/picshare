@@ -22,6 +22,8 @@ interface CommentDao {
     void insertComments(List<Comment> data);
     @Delete
     void delete(Comment comment);
+    @Query("DELETE FROM Comment where postKey = :postKey")
+    void deleteComments(String postKey);
 }
 
 public class CommentAsyncDao{
@@ -80,5 +82,23 @@ public class CommentAsyncDao{
 
             }
         }.execute();
+    }
+
+    public static void deleteAllCommentsByPostKey(String postKey, Model.basicOnCompleateListener listener) {
+
+        new AsyncTask<String, String, String>() {
+            @Override
+            protected String doInBackground(String... strings) {
+                ModelSql.db.CommentDao().deleteComments(postKey);
+                return "";
+            }
+
+            @Override
+            protected void onPostExecute(String data) {
+                super.onPostExecute(data);
+                listener.onCompleate(true);
+            }
+        }.execute();
+
     }
 }

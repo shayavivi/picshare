@@ -9,6 +9,6 @@
         android:title="profile" />
     <item
         android:id="@id/new_picture_fragment"
-        android:title="new_picture" />
+        android:title="new post" />
 
 </menu>

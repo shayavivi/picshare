@@ -175,6 +175,34 @@ public class Model {
         modelFirebase.addPost(post);
         PostAsyncDao.addPost(post, null);
     }
+    public void deletePost(String postKey, basicOnCompleateListener listener) {
+        modelFirebase.deleteAllCommentsByPostKey(postKey, new basicOnCompleateListener() {
+            @Override
+            public void onCompleate(boolean done) {
+                if (done == true){
+                    modelFirebase.deletePost(postKey, new basicOnCompleateListener() {
+                        @Override
+                        public void onCompleate(boolean done) {
+                            CommentAsyncDao.deleteAllCommentsByPostKey(postKey, new basicOnCompleateListener() {
+                                @Override
+                                public void onCompleate(boolean done) {
+                                    if (done == true){
+                                        PostAsyncDao.deletePostByPostKey(postKey, new basicOnCompleateListener() {
+                                            @Override
+                                            public void onCompleate(boolean done) {
+                                                listener.onCompleate(true);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                }
+            }
+        });
+    }
 
 
 
@@ -219,7 +247,7 @@ public class Model {
                     @Override
                     public void onCompleate(String key) {
                         comment.setCommentId(key);
-                        CommentAsyncDao.addComment(comment);
+                        CommentAsyncDao.addComment(comment);// maby add listener
                         listener.onComplete(comment);
                     }
                 });

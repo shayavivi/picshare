@@ -22,9 +22,12 @@ interface PostDao {
     void insertPosts(List<Post> data);
     @Delete
     void delete(Post post);
-
+    @Query("DELETE FROM Post where postKey = :postKey")
+    void deleteByPostKey(String postKey);
     @Query("select * from Post where userId =:userId")
     List<Post> getAllByUserId(String userId);
+    @Query("select * from Post where postKey =:post")
+    Post getPostByPostKey(String post);
 }
 
 public class PostAsyncDao{
@@ -117,6 +120,42 @@ public class PostAsyncDao{
 
             }
         }.execute(data);
+    }
+
+    public static void getPostByPostKey(String postKey, Model.addPostListener listener) {
+
+        new AsyncTask<String, String, Post>() {
+            @Override
+            protected Post doInBackground(String... strings) {
+                Post post = ModelSql.db.PostDao().getPostByPostKey(postKey);
+                return post;
+            }
+
+            @Override
+            protected void onPostExecute(Post data) {
+                super.onPostExecute(data);
+                listener.onComplete(data);
+
+            }
+        }.execute();
+
+    }
+
+    public static void deletePostByPostKey(String postKey, Model.basicOnCompleateListener listener) {
+        new AsyncTask<String, String, String>() {
+            @Override
+            protected String doInBackground(String... strings) {
+                ModelSql.db.PostDao().deleteByPostKey(postKey);
+                return "";
+            }
+
+            @Override
+            protected void onPostExecute(String data) {
+                super.onPostExecute(data);
+                listener.onCompleate(true);
+
+            }
+        }.execute();
     }
 }
 

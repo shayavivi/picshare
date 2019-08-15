@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -145,7 +146,6 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // get user image and username from query
                     Comment comment = new Comment("10",content.getText().toString(), MyApp.getCurrentUserId(), postKey, "user image");
                     Model.instance.addComment(comment, new Model.addCommentListener() {
 
@@ -154,6 +154,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                             mData.add(comment);
                             mCommentListAdapter.setmData(mData);
                             mCommentListAdapter.notifyDataSetChanged();
+                            holdingFragment.onAttach(holdingFragment.getContext());
                         }
                     });
                 }
@@ -166,6 +167,18 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                 updatePost.setVisibility(View.GONE);
             }
             else {
+                deletePost.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Model.instance.deletePost(postKeyOfClass, new Model.basicOnCompleateListener() {
+
+                            @Override
+                            public void onCompleate(boolean done) {
+                                holdingFragment.onAttach(holdingFragment.getContext());
+                            }
+                        });
+                    }
+                });
 
             }
 

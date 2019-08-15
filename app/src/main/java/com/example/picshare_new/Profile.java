@@ -22,6 +22,7 @@ import android.widget.Button;
 import com.example.picshare_new.model.Model;
 import com.example.picshare_new.model.Post;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -48,7 +49,12 @@ public class Profile extends Fragment {
         liveData.observe(this, new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> posts) {
-                mPostListAdapter.setmData(posts);
+                List<Post> notDeletetPosts = new LinkedList<>();
+                for(Post post: posts){
+                    if (post.getPicture() != null)
+                        notDeletetPosts.add(post);
+                }
+                mPostListAdapter.setmData(notDeletetPosts);
                 mPostListAdapter.notifyDataSetChanged();
             }
         });

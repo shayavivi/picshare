@@ -17,9 +17,9 @@ import com.example.picshare_new.MyApp;
 import java.util.LinkedList;
 import java.util.List;
 
-@Database(entities = {Post.class, Comment.class, User.class}, version = 10, exportSchema = false)
+@Database(entities = {Post.class, Comment.class, User.class}, version = 14, exportSchema = false)
 @TypeConverters({Converters.class})
-abstract    class AppLocalDbRepository extends RoomDatabase {
+abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract PostDao PostDao();
     public abstract CommentDao CommentDao();
     public abstract UserDao UserDao();
