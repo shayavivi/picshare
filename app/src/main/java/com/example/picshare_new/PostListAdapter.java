@@ -106,7 +106,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
         }
 
         public void bind(String postKey, String userPhoto,String picture, String title, Fragment holdingFragment){
-            dealButtonsAccrdingFragment(holdingFragment);
+            dealButtonsAccrdingFragment(holdingFragment, postKey, picture, title);
             postKeyOfClass = postKey;
             if (userPhoto != null)
                 Glide.with(MainActivity.context).load(userPhoto).into(mUserPhoto);
@@ -161,7 +161,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
             });
 
         }
-        private void dealButtonsAccrdingFragment(Fragment fragment){
+        private void dealButtonsAccrdingFragment(Fragment fragment, String postKey, String picture, String title){
             if(Home.class == fragment.getClass()){
                 deletePost.setVisibility(View.GONE);
                 updatePost.setVisibility(View.GONE);
@@ -179,6 +179,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostVi
                         });
                     }
                 });
+
+                ProfileDirections.ActionProfileFragmentToUpdateFragment actionToUpdate = ProfileDirections.actionProfileFragmentToUpdateFragment(postKey, picture, title);
+                updatePost.setOnClickListener(Navigation.createNavigateOnClickListener(actionToUpdate));
 
             }
 

@@ -36,5 +36,18 @@
         android:id="@+id/updateFragment"
         android:name="com.example.picshare_new.updateFragment"
         android:label="fragment_update"
-        tools:layout="@layout/fragment_update" />
+        tools:layout="@layout/fragment_update" >
+        <argument
+            android:name="postKey"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="picUri"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

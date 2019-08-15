@@ -29,7 +29,6 @@ public class Model {
 
 
 
-
     interface SaveImageListener{
         public void fail();
         public void complete(String uri);
@@ -171,9 +170,6 @@ public class Model {
                 });
             }
         });
-
-        modelFirebase.addPost(post);
-        PostAsyncDao.addPost(post, null);
     }
     public void deletePost(String postKey, basicOnCompleateListener listener) {
         modelFirebase.deleteAllCommentsByPostKey(postKey, new basicOnCompleateListener() {
@@ -204,10 +200,29 @@ public class Model {
         });
     }
 
-
-
-
-
+    public void updatePost(Post post, basicOnCompleateListener listener) {
+        UserAsyncDao.getUserById(new addUserListener() {
+            @Override
+            public void onComplete(User user) {
+                post.setUserPhoto(user.getProfileImage());
+                modelFirebase.updatePost(post, new basicOnCompleateListener() {
+                    @Override
+                    public void onCompleate(boolean done) {
+                        if (done == true){
+                            PostAsyncDao.addPost(post, new basicOnCompleateListener() {
+                                @Override
+                                public void onCompleate(boolean done) {
+                                    if (done == true){
+                                        listener.onCompleate(true);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
 
 
     //comments!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

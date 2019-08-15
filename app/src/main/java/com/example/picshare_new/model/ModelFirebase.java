@@ -184,6 +184,15 @@ public class ModelFirebase {
         });
     }
 
+    public void updatePost(Post post, Model.basicOnCompleateListener listener) {
+        db.collection("Posts").document(post.getPostKey()).set(post).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                listener.onCompleate(true);
+            }
+        });
+    }
+
 
 
 
@@ -227,4 +236,5 @@ public class ModelFirebase {
             }
         });
     }
+
 }
