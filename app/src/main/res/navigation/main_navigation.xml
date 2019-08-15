@@ -9,8 +9,8 @@
     <fragment
         android:id="@+id/home_fragment"
         android:name="com.example.picshare_new.Home"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_home_to_profile"
             app:destination="@id/profile_fragment" />
@@ -18,8 +18,8 @@
     <fragment
         android:id="@+id/profile_fragment"
         android:name="com.example.picshare_new.Profile"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profile_fragment_to_newPictureFragment"
             app:destination="@id/new_picture_fragment" />
@@ -30,13 +30,13 @@
     <fragment
         android:id="@+id/new_picture_fragment"
         android:name="com.example.picshare_new.new_picture"
-        android:label="fragment_new_picture"
-        tools:layout="@layout/fragment_new_picture"/>
+        android:label="New post"
+        tools:layout="@layout/fragment_new_picture" />
     <fragment
         android:id="@+id/updateFragment"
         android:name="com.example.picshare_new.updateFragment"
-        android:label="fragment_update"
-        tools:layout="@layout/fragment_update" >
+        android:label="Update"
+        tools:layout="@layout/fragment_update">
         <argument
             android:name="postKey"
             app:argType="string"

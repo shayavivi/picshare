@@ -8,13 +8,15 @@
 
     <ImageView
         android:id="@+id/row_post_image"
-        android:layout_width="131dp"
-        android:layout_height="99dp"
-        android:layout_marginStart="140dp"
-        android:layout_marginTop="44dp"
+        android:layout_width="186dp"
+        android:layout_height="159dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/row_post_uploader_image"
-        app:srcCompat="@drawable/user" />
+        app:srcCompat="@drawable/add_pic" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -63,14 +65,13 @@
         android:id="@+id/recycler_view_comments"
         android:layout_width="354dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/row_post_comment"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        android:layout_marginBottom="20dp"
+        android:paddingBottom="50dp"/>
 
     <TextView
         android:id="@+id/row_post_title"

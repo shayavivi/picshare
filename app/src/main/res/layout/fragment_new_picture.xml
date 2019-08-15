@@ -26,9 +26,11 @@
         android:layout_height="156dp"
         android:layout_marginStart="64dp"
         android:layout_marginTop="44dp"
-        android:src="@drawable/user"
+        android:src="@drawable/add_pic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newPictureTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/newPictureTitle"
+        app:srcCompat="@drawable/add_pic"
+        tools:srcCompat="@drawable/add_pic" />
 
     <Button
         android:id="@+id/newPictureSave"
